@@ -10,6 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.List;
 
 import firebaseappday.R;
@@ -33,13 +36,21 @@ public class ProductRVAdapter extends RecyclerView.Adapter<VH> {
     @Override
     public void onBindViewHolder(@NonNull VH holder, int position) {
         Product product=lProducts.get(position);
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user=auth.getCurrentUser();
         holder.tvName.setText(product.getProdName());
         holder.tvPrice.setText(""+(int) product.getProdPrice());
         holder.prodImage.setImageResource(product.getPrdImage());
         holder.tvCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                context.startActivity(new Intent(context,Login.class));
+                if (user==null){
+                    context.startActivity(new Intent(context,Login.class));
+                }
+                else {
+                    context.startActivity(new Intent(context,ProductActivity.class));
+                }
+
             }
         });
 
